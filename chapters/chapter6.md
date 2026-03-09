@@ -1,80 +1,59 @@
-# Chapter 6 - Ensemble Learning and Random Forests
+# Chapter 6 - Decision Trees
 
 ## Chapter Overview
 
-In this chapter, I learned how combining multiple models can create a stronger overall predictor.  
-Instead of searching for one “perfect” model, ensembles mix several weaker models to reduce errors.
+Decision Trees are versatile Machine Learning algorithms that can perform both classification and regression tasks, and even multioutput tasks. They are powerful algorithms, capable of fitting complex datasets.
 
-> **Important idea:** A good ensemble is often more robust than any single model, especially when its members are diverse.
+## Training and Visualizing a Decision Tree
 
-## Concepts I Learned
+Unlike many other models, Decision Trees are "white box" models: their decisions are easy to interpret and visualize.
+- **Root Node**: The top node that represents the entire population or sample.
+- **Leaf Node**: Nodes that do not split further and represent a class (or a value in regression).
 
-- Hard and soft voting classifiers
-- Bagging and pasting
-- Random patches and random subspaces
-- Random Forests and Extra-Trees
-- Boosting (AdaBoost and Gradient Boosting)
-- Stacking (meta-models)
+## The CART Training Algorithm
 
-## Important Terms (Simple Explanation)
+Scikit-Learn uses the **Classification and Regression Tree (CART)** algorithm to train Decision Trees. The algorithm splits the training set into two subsets using a single feature $k$ and a threshold $t_k$. It searches for the pair $(k, t_k)$ that produces the purest subsets (weighted by their size).
 
-- **Ensemble:** a group of models whose predictions are combined
-- **Hard voting:** take the class predicted by the majority of models
-- **Soft voting:** average predicted class probabilities and choose the highest
-- **Bagging (Bootstrap Aggregating):** train models on random samples with replacement
-- **Pasting:** similar to bagging, but without replacement
-- **Random Forest:** an ensemble of decision trees using bagging plus random feature selection at each split
-- **Extra-Trees:** like Random Forests but with extra randomness in split thresholds
-- **Boosting:** train models one after another, each focusing more on previous mistakes
-- **Stacking:** use a meta-model that learns how to combine predictions from base models
+### Gini Impurity vs. Entropy
+- **Gini Impurity**: Measures how often a randomly chosen element from the set would be incorrectly labeled.
+  $$G_i = 1 - \sum_{k=1}^{n} p_{i,k}^2$$
+- **Entropy**: Measures the average information content you reap from each message. A node's entropy is zero when it contains instances of only one class.
 
-## My Personal Reflection
+> [!NOTE]
+> Most of the time it does not make a big difference which one you use; they lead to similar trees. Gini impurity is slightly faster to compute.
 
-This chapter changed how I think about “best model” — I now see that combining several reasonable models can beat a highly tuned single one.  
-I also liked how Random Forests reuse decision trees in a way that feels both powerful and simple to understand.
+## Regularization Hyperparameters
 
-<details>
-  <summary>What I found difficult</summary>
-  I needed time to clearly separate bagging, boosting, and stacking in my head.  
-  My current mental picture: bagging = parallel + random samples, boosting = sequential + focus on errors, stacking = meta-model on top of base predictions.
-</details>
+Decision Trees make very few assumptions about the training data (unlike linear models). If left unconstrained, the tree structure will adapt itself to the training data, fitting it very closely—and most likely overfitting it.
+- **`max_depth`**: Limits the maximum depth of the tree.
+- **`min_samples_split`**: The minimum number of samples a node must have before it can be split.
+- **`min_samples_leaf`**: The minimum number of samples a leaf node must have.
+- **`max_leaf_nodes`**: The maximum number of leaf nodes.
 
-## Real-World Examples
+## Decision Tree Regression
 
-- Random Forest for credit risk or customer churn prediction
-- Gradient Boosting (and XGBoost-like methods) for Kaggle-style tabular competitions
-- Stacking logistic regression, trees, and SVMs to improve leaderboard performance
+Decision Trees are also capable of performing regression. Instead of predicting a class in each node, it predicts a value (usually the average target value of the training instances associated with that leaf node).
 
-## Key Takeaways
+```python
+from sklearn.tree import DecisionTreeRegressor
 
-1. Ensembles can significantly reduce variance and often improve generalization.
-2. Random Forests are strong default models for tabular data when I need a quick, solid baseline.
-3. Boosting methods can be extremely powerful but also more sensitive to hyperparameters and noise.
+tree_reg = DecisionTreeRegressor(max_depth=2)
+tree_reg.fit(X, y)
+```
 
-## Mini Quiz
+## Instability
 
-1. What is the main idea behind bagging?
+Decision Trees have a few limitations. They love orthogonal decision boundaries (all splits are perpendicular to an axis), which makes them sensitive to training set rotation. More importantly, they are very sensitive to small variations in the training data.
 
-<details>
-  <summary>Show answer</summary>
-  Train many models on different bootstrap samples (with replacement) and average their predictions to reduce variance.
-</details>
+> [!TIP]
+> **Random Forests** can limit this instability by averaging predictions over many trees.
 
-2. How is boosting different from bagging?
+## Summary Checklist
+- [x] Visualized the tree structure to ensure interpretability.
+- [x] Compared Gini vs Entropy for the specific dataset.
+- [x] Applied regularization (`max_depth`, `min_samples_leaf`) to prevent overfitting.
+- [x] Evaluated the impact of data rotation/scaling on the tree structure.
 
-<details>
-  <summary>Show answer</summary>
-  Boosting trains models sequentially, each new model focusing on errors of the previous ones, while bagging trains models in parallel on random samples.
-</details>
-
-## Summary
-
-This chapter taught me that I don’t always need a single perfect model.  
-Often, mixing multiple simpler models — especially decision trees — gives more stable and accurate results.
-
-## Key Insights I'm Taking Forward
-
-- Random Forests and Gradient Boosted Trees are **go-to models** for many real tabular problems.
-- Diversity between ensemble members is important; if all models make the same mistake, the ensemble will too.
-- Understanding ensembles helps me reason better about **bias vs variance** and how to combine different modeling ideas.
+---
+*Reference: "Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow" by Aurélien Géron.*
 

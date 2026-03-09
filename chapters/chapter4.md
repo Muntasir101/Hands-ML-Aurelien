@@ -2,81 +2,74 @@
 
 ## Chapter Overview
 
-This chapter helped me understand how models are actually trained, not just used.  
-I learned the core idea of minimizing a cost function so the model predictions get closer to real values.
+This chapter explores what happens "under the hood" of Machine Learning algorithms. Understanding how models are trained helps in selecting the right model, the right training algorithm, and a good set of hyperparameters.
 
-> **Important idea:** Training is basically an optimization problem where we try to reduce error step by step.
+## Linear Regression
 
-## Concepts I Learned
+Linear Regression models the relationship between a dependent variable and one or more independent variables.
+- **The Normal Equation**: A mathematical equation that gives the result directly.
+  $$\hat{\theta} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}$$
+- **Computational Complexity**: The Normal Equation gets very slow when the number of features grows large (e.g., 100,000).
 
-- Linear regression basics
-- Normal Equation approach
-- Gradient Descent (Batch, Stochastic, Mini-batch)
-- Learning rate and convergence
-- Polynomial regression (for non-linear patterns)
-- How feature scaling helps Gradient Descent converge faster
-- The risk of using high-degree polynomials (overfitting)
+## Gradient Descent (GD)
 
-## Important Terms (Simple Explanation)
+Gradient Descent is a generic optimization algorithm capable of finding optimal solutions to a wide range of problems. The goal is to tweak parameters iteratively to minimize a cost function.
 
-- **Cost function:** a score that shows how wrong the model is
-- **Gradient Descent:** method to reduce error by moving parameters in better directions
-- **Learning rate:** step size of each update
-- **Convergence:** when training reaches a stable low-error area
-- **Underfitting / Overfitting:** model too simple vs too complex
-- **Feature scaling:** rescaling inputs so optimization behaves better
+### Variants of Gradient Descent
 
-## My Personal Reflection
+| Algorithm | Data per Step | Accuracy | Speed |
+| :--- | :--- | :--- | :--- |
+| **Batch GD** | Full training set | High (Stable) | Slow |
+| **Stochastic GD** | 1 instance | Random (Noisy) | Fast |
+| **Mini-batch GD** | Small random sets | Moderate | Fast (Hardware optimized) |
 
-I enjoyed this chapter because it made model training feel mathematical but still practical.  
-At first I felt confused about why learning rate matters so much, but now I see that too small is slow and too large can overshoot.
+> [!IMPORTANT]
+> **Learning Rate**: If too small, the algorithm will take many iterations to converge. If too large, it might jump across the valley and fail to find a solution.
 
-<details>
-  <summary>What I found difficult</summary>
-  I struggled with the difference between Batch GD and Stochastic GD.  
-  My current understanding: Batch uses all data each step (stable but slow), while SGD updates faster with one sample (noisy but efficient).
-</details>
+## Polynomial Regression and Learning Curves
 
-## Real-World Examples
+When data is more complex than a straight line, we can use **Polynomial Regression** by adding powers of each feature as new features.
+- **Learning Curves**: Plots of the model's performance on the training set and the validation set as a function of the training set size.
+  - **High Bias**: Both curves reach a plateau; they are close and fairly high (Underfitting).
+  - **High Variance**: There is a gap between the curves, meaning the model performs much better on training data than validation data (Overfitting).
 
-- Predicting house prices with linear regression
-- Estimating sales trends over time
-- Modeling simple risk score relationships
+## Regularized Linear Models
 
-## Key Takeaways
+To reduce overfitting, we constrain the model (Regularization).
+1. **Ridge Regression**: Adds a regularization term equal to $\alpha \sum \theta_i^2$ to the cost function.
+2. **Lasso Regression**: Adds $\alpha \sum |\theta_i|$. It tends to eliminate the weights of the least important features (Automatic Feature Selection).
+3. **Elastic Net**: A middle ground between Ridge and Lasso.
 
-1. Model training means minimizing a cost function.
-2. Gradient Descent is powerful but sensitive to learning rate.
-3. Adding model complexity can help, but may cause overfitting.
+```python
+from sklearn.linear_model import Ridge, Lasso, ElasticNet
 
-## Mini Quiz
+# Ridge Regression
+ridge_reg = Ridge(alpha=1, solver="cholesky")
+ridge_reg.fit(X, y)
 
-1. Why is learning rate important in Gradient Descent?
+# Lasso Regression (useful for feature selection)
+lasso_reg = Lasso(alpha=0.1)
+lasso_reg.fit(X, y)
 
-<details>
-  <summary>Show answer</summary>
-  It controls update size. Too large can miss the minimum, too small makes training very slow.
-</details>
+# Elastic Net
+elastic_net = ElasticNet(alpha=0.1, l1_ratio=0.5)
+elastic_net.fit(X, y)
+```
 
-2. What is one key difference between Batch GD and SGD?
+## Early Stopping
 
-<details>
-  <summary>Show answer</summary>
-  Batch GD uses the full dataset per update; SGD uses one sample at a time.
-</details>
+A very different way to regularize iterative learning algorithms such as Gradient Descent is to stop training as soon as the validation error reaches a minimum. This is called **Early Stopping**.
 
-## Summary
+## Logistic Regression
 
-This chapter made me understand the "how" behind training models.  
-Now I can connect formulas, optimization, and practical model behavior better.
+Commonly used to estimate the probability that an instance belongs to a particular class.
+- **Softmax Regression**: A generalization of Logistic Regression to support multiple classes directly, without having to train and combine multiple binary classifiers.
 
-## Key Insights I'm Taking Forward
+## Summary Checklist
+- [x] Compared Normal Equation and Gradient Descent for the given feature size.
+- [x] Analyzed Learning Curves to detect Bias/Variance issues.
+- [x] Applied Regularization (Ridge/Lasso) to handle overfitting.
+- [x] Implemented Early Stopping for iterative models.
 
-- Training is not a black box: it is a **search process** in parameter space guided by the cost function and the learning rate.
-- Watching **loss curves over time** (and maybe on train vs validation) is essential to understand if training is healthy.
-- Feature scaling and good initialization are not “optional details”; they can decide whether Gradient Descent converges or fails.
-
-### Extra Notes from the Book
-
-- The Normal Equation is great for small to medium feature counts, but GD scales better when features are many.
-- Early stopping is another way to prevent overfitting when using iterative methods like Gradient Descent.
+---
+*Reference: "Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow" by Aurélien Géron.*

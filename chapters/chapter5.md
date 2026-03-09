@@ -1,81 +1,59 @@
-# Chapter 5 - Decision Trees
+# Chapter 5 - Support Vector Machines (SVM)
 
 ## Chapter Overview
 
-In this chapter, I learned how Decision Trees make predictions by splitting data step by step.  
-I liked this chapter because the model is easy to visualize and explain.
+Support Vector Machines (SVM) are powerful and versatile Machine Learning models capable of performing linear or nonlinear classification, regression, and even outlier detection. SVMs are particularly well-suited for classification of complex small- or medium-sized datasets.
 
-> **Important idea:** Decision Trees are very interpretable, but they can overfit if not controlled.
+## Linear SVM Classification
 
-## Concepts I Learned
+The fundamental idea behind SVMs is to find the "widest possible street" between classes. This is called **Large Margin Classification**.
+- **Support Vectors**: The instances located on the edge of the "street". The decision boundary is entirely determined by these vectors.
+- **Hard Margin Classification**: Strictly imposes that all instances must be off the street and on the right side. Only works if the data is linearly separable and is very sensitive to outliers.
+- **Soft Margin Classification**: Finds a good balance between keeping the street as large as possible and limiting the margin violations (i.e., instances that end up in the middle of the street or even on the wrong side).
 
-- Tree structure: root, internal nodes, leaves
-- Splitting criteria (Gini impurity / entropy)
-- Maximum depth and regularization
-- Overfitting in deep trees
-- Regression trees
-- How Decision Trees can approximate non-linear relationships by splitting feature space
-- The idea of axis-aligned splits (one feature at a time)
+> [!TIP]
+> Use the **C hyperparameter** to control this balance: a smaller `C` leads to a wider street but more margin violations (high bias, low variance).
 
-## Important Terms (Simple Explanation)
+## Nonlinear SVM Classification
 
-- **Node:** a decision point in the tree
-- **Leaf:** final output node (prediction)
-- **Gini impurity:** measure of class mixing in a node
-- **Entropy:** another impurity measure used for splitting
-- **Pruning / regularization:** methods to keep tree from becoming too complex
+When datasets are not linearly separable, we can add nonlinear features (like polynomial features).
+- **Polynomial Kernel**: Instead of adding features, we use a mathematical technique to get the same result without actually adding them (**Kernel Trick**).
+- **Similarity Features (Gaussian RBF Kernel)**: Adds features computed using a similarity function, which measures how much each instance resembles a particular landmark.
 
-## My Personal Reflection
+```python
+from sklearn.svm import SVC
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 
-This chapter felt intuitive because I could follow each decision path.  
-At the same time, I learned that a tree can memorize training data too easily if we let it grow without limits.
+# Nonlinear SVM with RBF Kernel
+rbf_kernel_svm_clf = Pipeline([
+    ("scaler", StandardScaler()),
+    ("svm_clf", SVC(kernel="rbf", gamma=5, C=0.001))
+])
+rbf_kernel_svm_clf.fit(X, y)
+```
 
-<details>
-  <summary>What I found difficult</summary>
-  I was confused about when to use Gini vs entropy.  
-  My understanding now is that both are valid and often produce similar trees, so tuning and validation matter more.
-</details>
+## SVM Regression
 
-## Real-World Examples
+SVMs also support linear and nonlinear regression. Instead of trying to fit the largest possible street between two classes while limiting margin violations, SVM Regression tries to fit as many instances as possible *on* the street while limiting margin violations (i.e., instances *off* the street).
 
-- Loan approval decision systems
-- Customer churn prediction
-- Basic medical decision support
+```python
+from sklearn.svm import LinearSVR
 
-## Key Takeaways
+svm_reg = LinearSVR(epsilon=1.5)
+svm_reg.fit(X, y)
+```
 
-1. Decision Trees are easy to explain and visualize.
-2. Without constraints, trees can overfit quickly.
-3. Hyperparameters like max depth are important for generalization.
+## Internal Mechanics (Brief)
 
-## Mini Quiz
+- **Decision Function**: $h(\mathbf{x}) = \mathbf{w}^T \mathbf{x} + b$.
+- **The Dual Problem**: Solving the dual problem is faster when the number of training instances is smaller than the number of features. It also makes the kernel trick possible.
 
-1. Why can very deep trees perform poorly on test data?
+## Summary Checklist
+- [x] Scaled the features (SVMs are sensitive to feature scales).
+- [x] Chose between LinearSVC and SVC(kernel="poly"/"rbf").
+- [x] Tuned the `C` hyperparameter to balance bias vs variance.
+- [x] Evaluated SVM Regression for continuous output tasks.
 
-<details>
-  <summary>Show answer</summary>
-  Because they may overfit training data and fail to generalize to unseen examples.
-</details>
-
-2. What does a leaf node represent?
-
-<details>
-  <summary>Show answer</summary>
-  The final prediction output after following decision splits.
-</details>
-
-## Summary
-
-This chapter gave me a practical and interpretable model type.  
-I now understand how trees split data and why controlling complexity is necessary.
-
-## Key Insights I'm Taking Forward
-
-- A single tree is easy to explain, but if it fits the training set perfectly I should suspect **overfitting**.
-- Early splits near the root matter a lot because they affect many samples; I should pay attention to which features are chosen first.
-- Understanding trees well now will make it easier for me to understand and debug ensembles like Random Forests and Gradient Boosting later.
-
-### Extra Notes from the Book
-
-- Trees can capture complex decision boundaries but become unstable if they grow too deep.
-- Many powerful ensemble methods (like Random Forests and Gradient Boosted Trees) are built from decision trees.
+---
+*Reference: "Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow" by Aurélien Géron.*

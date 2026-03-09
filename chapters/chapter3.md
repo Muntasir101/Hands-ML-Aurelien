@@ -2,80 +2,69 @@
 
 ## Chapter Overview
 
-In this chapter, I learned how classification works (especially with MNIST).  
-Unlike regression, classification predicts category labels instead of continuous values.
+Classification is one of the most common Machine Learning tasks. This chapter focuses on the MNIST dataset (70,000 small images of digits handwritten by high school students and employees of the US Census Bureau) to explore various classification challenges and metrics.
 
-> **Important idea:** Accuracy alone is not enough for many classification problems.
+## Performance Measures
 
-## Concepts I Learned
+Unlike regression, evaluating a classifier is often significantly trickier, especially with imbalanced datasets.
 
-- Binary classification
-- Multiclass classification
-- Multilabel classification
-- Decision scores and thresholds
-- Evaluating with multiple metrics
-- The idea of precision–recall trade-off
-- How ROC and PR curves tell different stories
+### 1. Confusion Matrix
+A much better way to evaluate the performance of a classifier is to look at the **Confusion Matrix**. It counts the number of times instances of class A are classified as class B.
+- **True Positives (TP)**: Correctly predicted positive.
+- **True Negatives (TN)**: Correctly predicted negative.
+- **False Positives (FP)**: Predicted positive, but actually negative (Type I error).
+- **False Negatives (FN)**: Predicted negative, but actually positive (Type II error).
 
-## Important Terms (Simple Explanation)
+### 2. Precision and Recall
+- **Precision**: Accuracy of the positive predictions.
+  $$\text{Precision} = \frac{TP}{TP + FP}$$
+- **Recall (Sensitivity/True Positive Rate)**: Ratio of positive instances correctly detected by the classifier.
+  $$\text{Recall} = \frac{TP}{TP + FN}$$
 
-- **Confusion matrix:** table of correct and wrong predictions
-- **Precision:** among predicted positives, how many were correct
-- **Recall:** among actual positives, how many were found
-- **F1-score:** balance between precision and recall
-- **ROC curve:** trade-off between true positive and false positive rates
-- **Precision–Recall curve:** focuses on performance on the positive class, useful for imbalanced data
+### 3. F1 Score
+The harmonic mean of precision and recall. It gives much more weight to low values.
+$$\text{F1} = \frac{2}{\frac{1}{\text{Precision}} + \frac{1}{\text{Recall}}}$$
 
-## My Personal Reflection
+## Precision/Recall Trade-off
 
-This chapter helped me think more deeply about model quality.  
-I learned that metric choice depends on what kind of mistake matters more.
+Increasing precision reduces recall, and vice-versa. Classifiers compute a score based on a **Decision Function**. If that score is greater than a **threshold**, it assigns the instance to the positive class.
 
-<details>
-  <summary>What confused me at first?</summary>
-  I mixed up precision and recall.  
-  Confusion matrix examples helped me separate them clearly.
-</details>
+> [!IMPORTANT]
+> To decide which threshold to use, you can use the `precision_recall_curve()` function to compute precision and recall for all possible thresholds.
 
-## Real-World Examples
+## The ROC Curve
 
-- Medical diagnosis (disease / no disease)
-- Spam detection
-- Document/news category classification
+The **Receiver Operating Characteristic (ROC)** curve plots the **True Positive Rate (Recall)** against the **False Positive Rate (1 - Specificity)**.
+- **AUC (Area Under the Curve)**: A perfect classifier will have a ROC AUC equal to 1, whereas a purely random classifier will have a ROC AUC equal to 0.5.
 
-## Key Takeaways
+## Multiclass Classification
 
-1. Accuracy can be misleading for imbalanced data.
-2. Precision and recall tell different stories.
-3. Threshold tuning can change model behavior a lot.
+While some algorithms (like Random Forest or Naive Bayes) can handle multiple classes directly, others (like SVM or Linear Classifiers) are strictly binary.
+- **One-versus-the-Rest (OvR)**: Train 10 binary classifiers (one for each digit) and select the one with the highest score.
+- **One-versus-One (OvO)**: Train a binary classifier for every pair of digits (N * (N-1) / 2 classifiers). Preferred for algorithms that scale poorly with the size of the training set (like SVM).
 
-## Mini Quiz
+## Professional Evaluation (Code Snippet)
 
-1. Why can high accuracy still be bad in imbalanced datasets?
+```python
+from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score
+from sklearn.model_selection import cross_val_predict
 
-<details>
-  <summary>Show answer</summary>
-  A model can predict the majority class most of the time and still miss important minority cases.
-</details>
+# Get predictions using K-fold cross-validation
+y_train_pred = cross_val_predict(sgd_clf, X_train, y_train_5, cv=3)
 
-2. What does a confusion matrix help us see?
+# Evaluate
+print("Confusion Matrix:\n", confusion_matrix(y_train_5, y_train_pred))
+print("Precision:", precision_score(y_train_5, y_train_pred))
+print("Recall:", recall_score(y_train_5, y_train_pred))
+print("F1 Score:", f1_score(y_train_5, y_train_pred))
+```
 
-<details>
-  <summary>Show answer</summary>
-  It shows where the model is correct and what kinds of mistakes it makes.
-</details>
+## Summary Checklist
+- [x] Analyzed the Confusion Matrix to identify specific errors.
+- [x] Evaluated the Precision/Recall trade-off.
+- [x] Plotted the ROC Curve and calculated AUC.
+- [x] Selected the appropriate Multiclass strategy (OvR vs OvO).
+- [x] Addressed imbalanced classes using appropriate metrics (PR Curve over ROC).
 
-## Summary
-
-This chapter taught me to evaluate classifiers more carefully and choose metrics based on problem goals.
-
-## Key Insights I'm Taking Forward
-
-- I should always ask: **what type of error hurts more here**—false positives or false negatives?
-- For tasks like fraud detection or medical screening, I must look at **precision and recall**, not just a single accuracy number.
-- Confusion matrices and PR curves help me see exactly which groups or classes the model is failing on, so I can design fixes (more data, new features, class weighting, etc.).
-
-### Extra Notes from the Book
-
-- For highly imbalanced datasets, Precision–Recall curves are often more informative than ROC curves.
-- Choosing the right threshold is part of the model design, not just a small detail.
+---
+*Reference: "Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow" by Aurélien Géron.*

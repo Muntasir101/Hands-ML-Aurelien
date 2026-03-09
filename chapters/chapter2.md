@@ -2,79 +2,99 @@
 
 ## Chapter Overview
 
-This chapter showed me a complete ML workflow using a housing dataset.  
-I liked this chapter because it felt practical and close to real-world project work.
+This chapter guides through a complete Machine Learning project, from data ingestion to model deployment, using the California Housing Prices dataset. The primary objective is to build a model that predicts median housing prices in various districts.
 
-> **Important idea:** A strong workflow prevents common mistakes like data leakage.
+### The 8-Step Machine Learning Checklist
+1. **Frame the problem** and look at the big picture.
+2. **Get the data**.
+3. **Explore the data** to gain insights.
+4. **Prepare the data** to better expose the underlying patterns to ML algorithms.
+5. **Explore many different models** and short-list the best ones.
+6. **Fine-tune your models** and combine them into a great solution.
+7. **Present your solution**.
+8. **Launch, monitor, and maintain** your system.
 
-## Concepts I Learned
+## Performance Measures
 
-- Framing the business problem
-- Creating train/test sets early
-- Data exploration with statistics and visualizations
-- Feature engineering and preprocessing pipelines
-- Model evaluation and tuning
-- The importance of a clear evaluation metric from the start
-- The idea of using validation sets and cross-validation together
+Selecting the right metric is critical for evaluating regression models:
+- **RMSE (Root Mean Square Error)**: The preferred performance measure for regression tasks. It gives a higher weight to large errors.
+  $$\text{RMSE}(\mathbf{X}, h) = \sqrt{\frac{1}{m} \sum_{i=1}^{m} (h(\mathbf{x}^{(i)}) - y^{(i)})^2}$$
+- **MAE (Mean Absolute Error)**: Preferred if there are many outlier districts.
 
-## Important Terms (Simple Explanation)
+## Data Splitting and Sampling
 
-- **Data leakage:** when training accidentally uses information from test data
-- **Pipeline:** ordered steps for preprocessing + model training
-- **Cross-validation:** repeated splits of training data to estimate performance
-- **RMSE:** common regression error metric; lower is better
-- **Hold-out set:** data kept aside to test the final chosen model
+Professional ML requires careful data splitting to avoid **Snooping Bias**.
+- **Random Sampling**: Generally fine if the dataset is large enough.
+- **Stratified Sampling**: Essential if the dataset is small to ensure the sample is representative of the whole population (e.g., ensuring the distribution of income categories is the same in both train and test sets).
 
-## My Personal Reflection
+```python
+from sklearn.model_selection import StratifiedShuffleSplit
 
-This chapter made ML feel structured and realistic.  
-I also realized how easy it is to get overconfident if evaluation is not done carefully.
+split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
+for train_index, test_index in split.split(housing, housing["income_cat"]):
+    strat_train_set = housing.loc[train_index]
+    strat_test_set = housing.loc[test_index]
+```
 
-<details>
-  <summary>What was most challenging for me?</summary>
-  At first, I did not understand why we should not touch the test set early.  
-  Now I see it gives an honest final estimate of model performance.
-</details>
+## Preparing Data for ML Algorithms
 
-## Real-World Examples
+Data preparation should be automated using functions and pipelines for reproducibility.
 
-- House price prediction
-- Demand forecasting
-- Delivery time prediction
+### 1. Data Cleaning
+Handle missing values using `SimpleImputer`.
+```python
+from sklearn.impute import SimpleImputer
+imputer = SimpleImputer(strategy="median")
+```
 
-## Key Takeaways
+### 2. Handling Text and Categorical Attributes
+Convert categories to numbers using `OneHotEncoder` (to avoid assuming proximity between values).
 
-1. Keep the test set separate from the beginning.
-2. Use pipelines for consistency and reproducibility.
-3. Compare multiple models before selecting one.
+### 3. Feature Scaling
+- **Min-Max Scaling (Normalization)**: Scales values to a range (0 to 1).
+- **Standardization**: Subtracts the mean and divides by the standard deviation. Less affected by outliers.
 
-## Mini Quiz
+### 4. Transformation Pipelines
+Using `ColumnTransformer` to apply different transformations to different columns.
 
-1. Why do we split train and test data early?
+```python
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
-<details>
-  <summary>Show answer</summary>
-  To prevent accidental overfitting to the test set and keep final evaluation honest.
-</details>
+num_pipeline = Pipeline([
+    ('imputer', SimpleImputer(strategy="median")),
+    ('std_scaler', StandardScaler()),
+])
 
-2. What is one benefit of using a pipeline?
+full_pipeline = ColumnTransformer([
+    ("num", num_pipeline, num_attribs),
+    ("cat", OneHotEncoder(), cat_attribs),
+])
 
-<details>
-  <summary>Show answer</summary>
-  It keeps preprocessing steps consistent and reduces manual mistakes.
-</details>
+housing_prepared = full_pipeline.fit_transform(housing)
+```
 
-## Summary
+## Fine-Tuning the Model
 
-I now have a clear ML project checklist: define, split, explore, prepare, train, validate, tune, test.
+Instead of manual tuning, use automated search techniques:
+- **Grid Search**: Exhaustive search over a specified subset of hyperparameters.
+- **Randomized Search**: Evaluates a given number of random combinations (better for large search spaces).
 
-## Key Insights I'm Taking Forward
+```python
+from sklearn.model_selection import GridSearchCV
 
-- A model that looks impressive without a solid **evaluation design** is not trustworthy.
-- Good ML practice means treating the test set like a **final exam** that I don’t peek at while I’m still learning.
-- Pipelines are not just a convenience; they protect me from subtle bugs where training and production use slightly different preprocessing.
+param_grid = [{'n_estimators': [3, 10, 30], 'max_features': [2, 4, 6, 8]}]
+grid_search = GridSearchCV(forest_reg, param_grid, cv=5, scoring='neg_mean_squared_error')
+grid_search.fit(housing_prepared, housing_labels)
+```
 
-### Extra Notes from the Book
+## Summary Checklist
+- [x] Framed the problem (Supervised, Regression, Batch).
+- [x] Selected RMSE as the performance measure.
+- [x] Implemented Stratified Sampling.
+- [x] Built a full Transformation Pipeline.
+- [x] Fine-tuned hyperparameters using `GridSearchCV`.
 
-- It is better to lock your test set early and not touch it until the very end.
-- Pipelines help avoid “data preparation mismatch” between training and real production use.
+---
+*Reference: "Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow" by Aurélien Géron.*

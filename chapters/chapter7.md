@@ -1,79 +1,56 @@
-# Chapter 7 - Dimensionality Reduction
+# Chapter 7 - Ensemble Learning and Random Forests
 
 ## Chapter Overview
 
-In this chapter, I learned how to reduce the number of input features while keeping as much useful information as possible.  
-This helps models run faster and can even improve performance by removing noise and redundant features.
+If you aggregate the predictions of a group of predictors (such as classifiers or regressors), you will often get better predictions than with the best individual predictor. A group of predictors is called an **ensemble**; thus, this technique is called Ensemble Learning.
 
-> **Important idea:** Dimensionality reduction is about finding a smaller, more meaningful representation of high-dimensional data.
+## Voting Classifiers
 
-## Concepts I Learned
+- **Hard Voting Classifier**: The class that receives the highest number of votes is the ensemble’s prediction.
+- **Soft Voting Classifier**: If all classifiers are able to estimate class probabilities, you can tell Scikit-Learn to predict the class with the highest class probability, averaged over all the individual classifiers. This often achieves higher performance because it gives more weight to highly confident votes.
 
-- The curse of dimensionality (why high dimensions are hard)
-- Projection vs manifold learning
-- Principal Component Analysis (PCA)
-- Explained variance ratio and choosing the number of components
-- Incremental PCA for very large datasets
-- Randomized PCA for fast approximations
-- Kernel PCA for non-linear dimensionality reduction
-- Manifold learning methods (briefly), like LLE and t-SNE for visualization
+## Bagging and Pasting
 
-## Important Terms (Simple Explanation)
+One way to get a diverse set of classifiers is to use the same training algorithm for every predictor and train them on different random subsets of the training set.
+- **Bagging (Bootstrap Aggregating)**: When sampling is performed *with* replacement.
+- **Pasting**: When sampling is performed *without* replacement.
 
-- **Dimensionality reduction:** turning many features into fewer, more informative ones
-- **Curse of dimensionality:** in high dimensions, data becomes sparse and distances lose meaning
-- **Projection:** mapping data onto a lower-dimensional subspace
-- **Principal components:** directions of maximum variance in the data
-- **Explained variance ratio:** how much of the original variation each component captures
-- **Kernel PCA:** PCA performed in a high-dimensional feature space using kernels
-- **Manifold learning:** techniques that assume data lies on a lower-dimensional curved surface inside a high-dimensional space
+> [!TIP]
+> **Out-of-Bag (oob) Evaluation**: With bagging, some instances may be sampled several times for any given predictor, while others may not be sampled at all. You can evaluate the ensemble by averaging the predictions on these oob instances.
 
-## My Personal Reflection
+## Random Forests
 
-Before this chapter, I assumed “more features = more power”.  
-Now I see that blindly adding features can hurt models, especially when the data becomes too sparse and noisy.
+A Random Forest is an ensemble of Decision Trees, generally trained via the bagging method. Instead of searching for the very best feature when splitting a node, it searches for the best feature among a random subset of features. This results in greater tree diversity, which trades a higher bias for a lower variance.
 
-<details>
-  <summary>What I found difficult</summary>
-  The math behind PCA, SVD, and eigenvectors was intense.  
-  For now, I focus on the idea that PCA finds directions where the data varies the most and uses those as new axes.
-</details>
+```python
+from sklearn.ensemble import RandomForestClassifier
 
-## Real-World Examples
+rnd_clf = RandomForestClassifier(n_estimators=500, max_leaf_nodes=16, n_jobs=-1)
+rnd_clf.fit(X_train, y_train)
+```
 
-- Compressing image data (e.g. faces) before training classifiers
-- Reducing word embedding dimensions for visualization or faster models
-- Speeding up training for algorithms that don’t like very high-dimensional inputs (like some kernel methods)
+## Boosting
 
-## Key Takeaways
+Boosting refers to any Ensemble method that can combine several weak learners into a strong learner. The general idea is to train predictors sequentially, each trying to correct its predecessor.
+- **AdaBoost (Adaptive Boosting)**: Each predictor pays more attention to the training instances that the predecessor underfitted.
+- **Gradient Boosting**: Instead of tweaking instance weights at every iteration like AdaBoost, this method tries to fit the new predictor to the *residual errors* made by the previous predictor.
 
-1. More dimensions are not always better; high-dimensional spaces can confuse models and humans.
-2. PCA is a strong default technique for building a compact representation of data.
-3. Non-linear methods (Kernel PCA, LLE, t-SNE) are especially useful for understanding complex structures and visualizing clusters.
+```python
+from sklearn.ensemble import GradientBoostingRegressor
 
-## Mini Quiz
+gbrt = GradientBoostingRegressor(max_depth=2, n_estimators=3, learning_rate=1.0)
+gbrt.fit(X, y)
+```
 
-1. What is the main goal of PCA?
+## Stacking (Stacked Generalization)
 
-<details>
-  <summary>Show answer</summary>
-  To find a lower-dimensional representation that captures as much variance of the original data as possible.
-</details>
+Instead of using trivial functions (such as hard voting) to aggregate the predictions of all predictors in an ensemble, why don’t we train a model to perform this aggregation? This model is called a **blender** or a **meta-learner**.
 
-2. Why can very high-dimensional data cause problems?
+## Summary Checklist
+- [x] Evaluated Hard vs Soft Voting performance.
+- [x] Used oob evaluation to estimate generalization error without a validation set.
+- [x] Analyzed feature importance using Random Forest properties.
+- [x] Implemented Early Stopping with Gradient Boosting to prevent overfitting.
 
-<details>
-  <summary>Show answer</summary>
-  Because of the curse of dimensionality: data becomes sparse, distances lose meaning, and models may overfit or become unstable.
-</details>
-
-## Summary
-
-This chapter taught me that simplifying the feature space can make models faster, easier to train, and sometimes more robust.  
-I now see dimensionality reduction as an important preprocessing step, especially before visualization or training complex models.
-
-## Key Insights I'm Taking Forward
-
-- Before engineering more and more features, I should ask whether I can **summarize** existing features with PCA or related methods.
-- Visualizing high-dimensional data (for example, with t-SNE after a PCA step) can reveal patterns and clusters that raw data hides.
-- Dimensionality reduction is not just a “nice-to-have” step; it is part of designing a good representation for the problem I’m solving.
+---
+*Reference: "Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow" by Aurélien Géron.*
