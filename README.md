@@ -40,9 +40,8 @@ Each chapter file follows the same structure:
 - [Chapter 3 – Classification](./chapters/chapter3.md)
 - [Chapter 4 – Training Models](./chapters/chapter4.md)
 - [Chapter 5 – Support Vector Machines](./chapters/chapter5.md)
-- [Chapter 6 – Decision Trees](./chapters/chapter6.md)
-- [Chapter 7 – Ensemble Learning and Random Forests](./chapters/chapter7.md)
-- [Chapter 8 – Dimensionality Reduction](./chapters/chapter8.md)
+- [Chapter 6 – Ensemble Learning and Random Forests](./chapters/chapter6.md)
+- [Chapter 7 – Dimensionality Reduction](./chapters/chapter7.md)
 
 If you are new to ML, I recommend reading the chapters in order.  
 You can also jump to a specific topic you are currently studying.
@@ -61,6 +60,6 @@ You can also jump to a specific topic you are currently studying.
 ## If You Want to Continue This Style
 
 1. Copy `chapters/chapter-template.md`
-2. Rename it (example: `chapter9.md`)
+2. Rename it (example: `chapter8.md`)
 3. Fill it out in your own words, honestly showing what you understood and where you struggled
 4. Add the new chapter link to this list in `README.md`

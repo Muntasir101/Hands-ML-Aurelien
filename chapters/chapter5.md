@@ -1,81 +1,81 @@
-# Chapter 5 - Support Vector Machines
+# Chapter 5 - Decision Trees
 
 ## Chapter Overview
 
-In this chapter, I learned how Support Vector Machines (SVMs) can do both classification and regression.  
-What I found interesting is that SVM tries to create the widest possible margin between classes.
+In this chapter, I learned how Decision Trees make predictions by splitting data step by step.  
+I liked this chapter because the model is easy to visualize and explain.
 
-> **Important idea:** SVM focuses on boundary quality (margin), not just fitting every point perfectly.
+> **Important idea:** Decision Trees are very interpretable, but they can overfit if not controlled.
 
 ## Concepts I Learned
 
-- Linear SVM classification
-- Soft margin classification
-- Role of parameter `C`
-- Kernel trick for non-linear data
-- SVM regression basics
-- How different kernels (linear, polynomial, RBF) affect the decision boundary
-- The idea of mapping data into higher-dimensional spaces to make it linearly separable
+- Tree structure: root, internal nodes, leaves
+- Splitting criteria (Gini impurity / entropy)
+- Maximum depth and regularization
+- Overfitting in deep trees
+- Regression trees
+- How Decision Trees can approximate non-linear relationships by splitting feature space
+- The idea of axis-aligned splits (one feature at a time)
 
 ## Important Terms (Simple Explanation)
 
-- **Margin:** distance between decision boundary and nearest data points
-- **Support vectors:** critical points that define the boundary
-- **Kernel trick:** method to handle non-linear patterns without explicitly adding many features
-- **Soft margin:** allows some mistakes to improve generalization
-- **Hyperparameter `C`:** controls trade-off between margin width and classification errors
+- **Node:** a decision point in the tree
+- **Leaf:** final output node (prediction)
+- **Gini impurity:** measure of class mixing in a node
+- **Entropy:** another impurity measure used for splitting
+- **Pruning / regularization:** methods to keep tree from becoming too complex
 
 ## My Personal Reflection
 
-This chapter felt more mathematical than earlier ones, but the intuition was powerful.  
-I liked the idea that only a few important points (support vectors) can control the classifier.
+This chapter felt intuitive because I could follow each decision path.  
+At the same time, I learned that a tree can memorize training data too easily if we let it grow without limits.
 
 <details>
   <summary>What I found difficult</summary>
-  The kernel trick was confusing at first.  
-  My current understanding: kernels help model curved boundaries efficiently, without manually creating huge feature sets.
+  I was confused about when to use Gini vs entropy.  
+  My understanding now is that both are valid and often produce similar trees, so tuning and validation matter more.
 </details>
 
 ## Real-World Examples
 
-- Text classification (spam vs not spam)
-- Image category classification
-- Risk or anomaly detection tasks
+- Loan approval decision systems
+- Customer churn prediction
+- Basic medical decision support
 
 ## Key Takeaways
 
-1. SVM is strong when classes are separable with a clear margin.
-2. Parameter `C` is very important for bias-variance trade-off.
-3. Kernels make SVM useful for non-linear datasets.
+1. Decision Trees are easy to explain and visualize.
+2. Without constraints, trees can overfit quickly.
+3. Hyperparameters like max depth are important for generalization.
 
 ## Mini Quiz
 
-1. What does a larger margin usually help with?
+1. Why can very deep trees perform poorly on test data?
 
 <details>
   <summary>Show answer</summary>
-  Better generalization on unseen data, because the model is less sensitive to noise.
+  Because they may overfit training data and fail to generalize to unseen examples.
 </details>
 
-2. What is the purpose of the kernel trick?
+2. What does a leaf node represent?
 
 <details>
   <summary>Show answer</summary>
-  To model non-linear relationships efficiently without explicitly transforming data into very high-dimensional features.
+  The final prediction output after following decision splits.
 </details>
 
 ## Summary
 
-This chapter helped me understand a different way to think about classification: maximize margin first, then control mistakes with `C`.  
-I now see why SVM is still a useful and elegant algorithm.
+This chapter gave me a practical and interpretable model type.  
+I now understand how trees split data and why controlling complexity is necessary.
 
 ## Key Insights I'm Taking Forward
 
-- The **support vectors** are like the “most influential” training points; understanding them helps me debug and explain the model.
-- The kernel is basically a tool that decides what kind of **shapes** my decision boundary can take (line, curve, complicated surface).
-- Tuning `C` and kernel parameters is not random trial and error: it is about choosing between smoother, more generalizable boundaries and sharper, more overfit ones.
+- A single tree is easy to explain, but if it fits the training set perfectly I should suspect **overfitting**.
+- Early splits near the root matter a lot because they affect many samples; I should pay attention to which features are chosen first.
+- Understanding trees well now will make it easier for me to understand and debug ensembles like Random Forests and Gradient Boosting later.
 
 ### Extra Notes from the Book
 
-- Using a very complex kernel without enough regularization can lead to serious overfitting.
-- Feature scaling is important for SVMs, especially with RBF kernels.
+- Trees can capture complex decision boundaries but become unstable if they grow too deep.
+- Many powerful ensemble methods (like Random Forests and Gradient Boosted Trees) are built from decision trees.
