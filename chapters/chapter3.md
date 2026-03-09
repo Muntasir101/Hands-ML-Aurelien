@@ -14,6 +14,8 @@ Unlike regression, classification predicts category labels instead of continuous
 - Multilabel classification
 - Decision scores and thresholds
 - Evaluating with multiple metrics
+- The idea of precision–recall trade-off
+- How ROC and PR curves tell different stories
 
 ## Important Terms (Simple Explanation)
 
@@ -22,6 +24,7 @@ Unlike regression, classification predicts category labels instead of continuous
 - **Recall:** among actual positives, how many were found
 - **F1-score:** balance between precision and recall
 - **ROC curve:** trade-off between true positive and false positive rates
+- **Precision–Recall curve:** focuses on performance on the positive class, useful for imbalanced data
 
 ## My Personal Reflection
 
@@ -65,3 +68,14 @@ I learned that metric choice depends on what kind of mistake matters more.
 ## Summary
 
 This chapter taught me to evaluate classifiers more carefully and choose metrics based on problem goals.
+
+## Key Insights I'm Taking Forward
+
+- I should always ask: **what type of error hurts more here**—false positives or false negatives?
+- For tasks like fraud detection or medical screening, I must look at **precision and recall**, not just a single accuracy number.
+- Confusion matrices and PR curves help me see exactly which groups or classes the model is failing on, so I can design fixes (more data, new features, class weighting, etc.).
+
+### Extra Notes from the Book
+
+- For highly imbalanced datasets, Precision–Recall curves are often more informative than ROC curves.
+- Choosing the right threshold is part of the model design, not just a small detail.

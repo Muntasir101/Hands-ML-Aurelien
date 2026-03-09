@@ -14,6 +14,8 @@ I liked this chapter because the model is easy to visualize and explain.
 - Maximum depth and regularization
 - Overfitting in deep trees
 - Regression trees
+- How Decision Trees can approximate non-linear relationships by splitting feature space
+- The idea of axis-aligned splits (one feature at a time)
 
 ## Important Terms (Simple Explanation)
 
@@ -66,3 +68,14 @@ At the same time, I learned that a tree can memorize training data too easily if
 
 This chapter gave me a practical and interpretable model type.  
 I now understand how trees split data and why controlling complexity is necessary.
+
+## Key Insights I'm Taking Forward
+
+- A single tree is easy to explain, but if it fits the training set perfectly I should suspect **overfitting**.
+- Early splits near the root matter a lot because they affect many samples; I should pay attention to which features are chosen first.
+- Understanding trees well now will make it easier for me to understand and debug ensembles like Random Forests and Gradient Boosting later.
+
+### Extra Notes from the Book
+
+- Trees can capture complex decision boundaries but become unstable if they grow too deep.
+- Many powerful ensemble methods (like Random Forests and Gradient Boosted Trees) are built from decision trees.

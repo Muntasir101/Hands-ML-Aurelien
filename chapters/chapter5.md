@@ -14,6 +14,8 @@ What I found interesting is that SVM tries to create the widest possible margin 
 - Role of parameter `C`
 - Kernel trick for non-linear data
 - SVM regression basics
+- How different kernels (linear, polynomial, RBF) affect the decision boundary
+- The idea of mapping data into higher-dimensional spaces to make it linearly separable
 
 ## Important Terms (Simple Explanation)
 
@@ -66,3 +68,14 @@ I liked the idea that only a few important points (support vectors) can control 
 
 This chapter helped me understand a different way to think about classification: maximize margin first, then control mistakes with `C`.  
 I now see why SVM is still a useful and elegant algorithm.
+
+## Key Insights I'm Taking Forward
+
+- The **support vectors** are like the “most influential” training points; understanding them helps me debug and explain the model.
+- The kernel is basically a tool that decides what kind of **shapes** my decision boundary can take (line, curve, complicated surface).
+- Tuning `C` and kernel parameters is not random trial and error: it is about choosing between smoother, more generalizable boundaries and sharper, more overfit ones.
+
+### Extra Notes from the Book
+
+- Using a very complex kernel without enough regularization can lead to serious overfitting.
+- Feature scaling is important for SVMs, especially with RBF kernels.

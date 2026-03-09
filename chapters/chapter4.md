@@ -14,6 +14,8 @@ I learned the core idea of minimizing a cost function so the model predictions g
 - Gradient Descent (Batch, Stochastic, Mini-batch)
 - Learning rate and convergence
 - Polynomial regression (for non-linear patterns)
+- How feature scaling helps Gradient Descent converge faster
+- The risk of using high-degree polynomials (overfitting)
 
 ## Important Terms (Simple Explanation)
 
@@ -22,6 +24,7 @@ I learned the core idea of minimizing a cost function so the model predictions g
 - **Learning rate:** step size of each update
 - **Convergence:** when training reaches a stable low-error area
 - **Underfitting / Overfitting:** model too simple vs too complex
+- **Feature scaling:** rescaling inputs so optimization behaves better
 
 ## My Personal Reflection
 
@@ -66,3 +69,14 @@ At first I felt confused about why learning rate matters so much, but now I see 
 
 This chapter made me understand the "how" behind training models.  
 Now I can connect formulas, optimization, and practical model behavior better.
+
+## Key Insights I'm Taking Forward
+
+- Training is not a black box: it is a **search process** in parameter space guided by the cost function and the learning rate.
+- Watching **loss curves over time** (and maybe on train vs validation) is essential to understand if training is healthy.
+- Feature scaling and good initialization are not “optional details”; they can decide whether Gradient Descent converges or fails.
+
+### Extra Notes from the Book
+
+- The Normal Equation is great for small to medium feature counts, but GD scales better when features are many.
+- Early stopping is another way to prevent overfitting when using iterative methods like Gradient Descent.

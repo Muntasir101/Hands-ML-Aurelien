@@ -14,6 +14,8 @@ I liked this chapter because it felt practical and close to real-world project w
 - Data exploration with statistics and visualizations
 - Feature engineering and preprocessing pipelines
 - Model evaluation and tuning
+- The importance of a clear evaluation metric from the start
+- The idea of using validation sets and cross-validation together
 
 ## Important Terms (Simple Explanation)
 
@@ -21,6 +23,7 @@ I liked this chapter because it felt practical and close to real-world project w
 - **Pipeline:** ordered steps for preprocessing + model training
 - **Cross-validation:** repeated splits of training data to estimate performance
 - **RMSE:** common regression error metric; lower is better
+- **Hold-out set:** data kept aside to test the final chosen model
 
 ## My Personal Reflection
 
@@ -64,3 +67,14 @@ I also realized how easy it is to get overconfident if evaluation is not done ca
 ## Summary
 
 I now have a clear ML project checklist: define, split, explore, prepare, train, validate, tune, test.
+
+## Key Insights I'm Taking Forward
+
+- A model that looks impressive without a solid **evaluation design** is not trustworthy.
+- Good ML practice means treating the test set like a **final exam** that I don’t peek at while I’m still learning.
+- Pipelines are not just a convenience; they protect me from subtle bugs where training and production use slightly different preprocessing.
+
+### Extra Notes from the Book
+
+- It is better to lock your test set early and not touch it until the very end.
+- Pipelines help avoid “data preparation mismatch” between training and real production use.

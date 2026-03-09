@@ -13,6 +13,8 @@ Before this, I thought ML was only about complex models, but now I understand th
 - Types of learning: supervised, unsupervised, semi-supervised, reinforcement
 - Batch learning vs online learning
 - Instance-based vs model-based learning
+- The idea of generalization to unseen data
+- How ML fits into a larger data pipeline (collect → prepare → train → evaluate → deploy)
 
 ## Important Terms (Simple Explanation)
 
@@ -21,6 +23,8 @@ Before this, I thought ML was only about complex models, but now I understand th
 - **Label:** output value we want to predict
 - **Overfitting:** model memorizes training data, performs poorly on new data
 - **Underfitting:** model is too simple and misses patterns
+- **Generalization:** how well a model works on new, unseen examples
+- **Feature engineering:** creating useful input features from raw data
 
 ## My Personal Reflection
 
@@ -32,6 +36,11 @@ After this chapter, I realized simple models can work very well when data qualit
   I was confused between model parameters and hyperparameters.  
   Now I understand: parameters are learned from data, hyperparameters are chosen before training.
 </details>
+
+### Extra Notes from the Book
+
+- ML is especially useful when we cannot write clear rules by hand.
+- Collecting the right data can be more important than picking a fancy algorithm.
 
 ## Real-World Examples
 
@@ -65,3 +74,9 @@ After this chapter, I realized simple models can work very well when data qualit
 
 This chapter gave me a strong foundation.  
 I now understand ML as a full process: define problem, prepare data, train, evaluate, improve.
+
+## Key Insights I'm Taking Forward
+
+- Before touching code, I should ask what **data** I really have and what labels are realistic to get.
+- Many real ML tasks (like recommendations or fraud detection) are fuzzy, so framing the problem clearly is already a big part of the work.
+- Thinking about **overfitting vs underfitting** early will influence almost every decision I make later (data size, model choice, regularization, evaluation).
